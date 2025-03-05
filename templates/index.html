@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regression Analysis</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Regression Analysis</h1>
+
+        {% if not form_submitted %}
+        <form method="POST" enctype="multipart/form-data" class="mt-3">
+            <div class="form-group">
+                <label for="file">Upload CSV File:</label>
+                <input type="file" name="file" id="file" class="form-control-file">
+            </div>
+            <div class="form-check">
+                <input type="checkbox" name="lasso" id="lasso" class="form-check-input">
+                <label class="form-check-label" for="lasso">Lasso Regression</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" name="ridge" id="ridge" class="form-check-input">
+                <label class="form-check-label" for="ridge">Ridge Regression</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" name="elasticnet" id="elasticnet" class="form-check-input">
+                <label class="form-check-label" for="elasticnet">ElasticNet Regression</label>
+            </div>
+             <div class="form-check">
+                <input type="checkbox" name="all" id="all" class="form-check-input">
+                <label class="form-check-label" for="all">All</label>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Analyze</button>
+        </form>
+        {% endif %}
+
+        {% if error %}
+            <div class="alert alert-danger mt-3">{{ error }}</div>
+        {% endif %}
+
+        {% if lasso_html or ridge_html or elasticnet_html %}
+        <h2>Regression Results</h2>
+        {% if lasso_html %}
+        <h3>Lasso Regression</h3>
+        <div class="table-container table-responsive">
+            {{ lasso_html | safe }}
+        </div>
+        {% endif %}
+
+        {% if ridge_html %}
+        <h3>Ridge Regression</h3>
+        <div class="table-container table-responsive">
+            {{ ridge_html | safe }}
+        </div>
+        {% endif %}
+
+        {% if elasticnet_html %}
+        <h3>ElasticNet Regression</h3>
+        <div class="table-container table-responsive">
+            {{ elasticnet_html | safe }}
+        </div>
+        {% endif %}
+
+        <div class="mt-3">
+            <a href="{{ url_for('download_results', filetype='xlsx') }}" class="btn btn-success">Download as XLSX</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

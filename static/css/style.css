@@ -1,0 +1,78 @@
+body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(45deg, #e66465, #9198e5);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Stronger shadow for contrast */
+            position: relative;
+            z-index: 1; /* Ensure content is above the background animation */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #007bff; /* Primary color */
+        }
+
+        h3 {
+            color: #007bff;
+            margin-top: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .form-check {
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .table {
+            margin-top: 20px;
+        }
+
+        .table th,
+        .table td {
+            text-align: left;
+        }
+
+        /* Scrollable Table Styles */
+        .table-responsive {
+            overflow-x: auto; /* Enable horizontal scroll if needed */
+        }
+        .table-container {
+            max-height: 400px; /* Set a maximum height for the table container */
+            overflow-y: auto; /* Enable vertical scrolling */
+            border: 1px solid #dee2e6; /* Add a border for better visibility */
+        }
