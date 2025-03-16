@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,42 +8,53 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/css/style.css">
 </head>
+
 <body>
-    <div class="container">
-        <h1>Regression Analysis</h1>
-
-        {% if not form_submitted %}
-        <form method="POST" enctype="multipart/form-data" class="mt-3">
-            <div class="form-group">
-                <label for="file">Upload CSV File:</label>
-                <input type="file" name="file" id="file" class="form-control-file">
+    {% if not form_submitted %}
+    <div id="inputFormContainer">
+        <div class="container">
+            <div class="title-card">
+                <h1>Regression Analysis</h1>
             </div>
-            <div class="form-check">
-                <input type="checkbox" name="lasso" id="lasso" class="form-check-input">
-                <label class="form-check-label" for="lasso">Lasso Regression</label>
-            </div>
-            <div class="form-check">
-                <input type="checkbox" name="ridge" id="ridge" class="form-check-input">
-                <label class="form-check-label" for="ridge">Ridge Regression</label>
-            </div>
-            <div class="form-check">
-                <input type="checkbox" name="elasticnet" id="elasticnet" class="form-check-input">
-                <label class="form-check-label" for="elasticnet">ElasticNet Regression</label>
-            </div>
-             <div class="form-check">
-                <input type="checkbox" name="all" id="all" class="form-check-input">
-                <label class="form-check-label" for="all">All</label>
-            </div>
-            <button type="submit" class="btn btn-primary mt-2">Analyze</button>
-        </form>
-        {% endif %}
-
-        {% if error %}
+            <form method="POST" enctype="multipart/form-data" class="mt-3">
+                <div class="form-group">
+                    <label for="file">Upload CSV File:</label>
+                    <input type="file" name="file" id="file" class="form-control-file">
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" name="lasso" id="lasso" class="form-check-input">
+                    <label class="form-check-label" for="lasso">Lasso Regression</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" name="ridge" id="ridge" class="form-check-input">
+                    <label class="form-check-label" for="ridge">Ridge Regression</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" name="elasticnet" id="elasticnet" class="form-check-input">
+                    <label class="form-check-label" for="elasticnet">ElasticNet Regression</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" name="pca" id="pca" class="form-check-input">
+                    <label class="form-check-label" for="pca">Principal Component Analysis (PCA)</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" name="all" id="all" class="form-check-input">
+                    <label class="form-check-label" for="all">All</label>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Analyze</button>
+            </form>
+            {% if error %}
             <div class="alert alert-danger mt-3">{{ error }}</div>
-        {% endif %}
-
-        {% if lasso_html or ridge_html or elasticnet_html %}
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <div class="container" id="outputContainer">
+        <div class="title-card">
+            <h1>Regression Analysis</h1>
+        </div>
         <h2>Regression Results</h2>
+
         {% if lasso_html %}
         <h3>Lasso Regression</h3>
         <div class="table-container table-responsive">
@@ -64,14 +76,31 @@
         </div>
         {% endif %}
 
+        {% if pca_html %}
+        <h3>Principal Component Analysis (PCA)</h3>
+        <div class="table-container table-responsive">
+            {{ pca_html | safe }}
+        </div>
+        {% if pca_plot_path %}
+        <div class="mt-4 text-center">
+            <h4>PCA Plot: PC1 vs PC2</h4>
+            <img src="{{ pca_plot_path }}" class="img-fluid pca-plot" alt="PCA Plot">
+        </div>
+        <div class="mt-3">
+    <a href="{{ url_for('download_pca_plot') }}" class="btn btn-primary">Download PCA Plot</a>
+</div>
+        {% endif %}
+        {% endif %}
+
         <div class="mt-3">
             <a href="{{ url_for('download_results', filetype='xlsx') }}" class="btn btn-success">Download as XLSX</a>
         </div>
-        {% endif %}
     </div>
+    {% endif %}
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
