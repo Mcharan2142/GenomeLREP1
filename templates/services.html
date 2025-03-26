@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}GenomeLREP{% endblock %}
+
+{% block content %}
+<section class="container py-5 mt-5">
+    <h1 class="mb-4">Data Analysis Services</h1>
+
+    {% if not form_submitted %}
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Upload Your Data</h2>
+            <form method="POST" action="{{ url_for('analyze') }}" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file">Upload CSV File:</label>
+                    <input type="file" name="file" id="file" class="form-control-file">
+                    <small class="form-text text-muted">File should be a CSV with features in columns and samples in rows.</small>
+                </div>
+
+                <div class="form-group">
+                    <h5>Select Analysis Methods:</h5>
+
+                    <!-- Lasso Regression -->
+                    <div class="form-check">
+                        <input type="checkbox" name="lasso" id="lasso" class="form-check-input method-checkbox">
+                        <label class="form-check-label" for="lasso">Lasso Regression</label>
+                    </div>
+                    <div class="ml-4 method-params" id="lasso-params" style="display: none;">
+                        <div class="form-group">
+                            <label for="lasso_alpha">Alpha (regularization strength):</label>
+                            <input type="number" name="lasso_alpha" id="lasso_alpha" class="form-control form-control-sm" value="0.1" step="0.01" min="0">
+                            <small class="form-text text-muted">Higher values mean stronger regularization.</small>
+                        </div>
+                    </div>
+
+                    <!-- Ridge Regression -->
+                    <div class="form-check">
+                        <input type="checkbox" name="ridge" id="ridge" class="form-check-input method-checkbox">
+                        <label class="form-check-label" for="ridge">Ridge Regression</label>
+                    </div>
+                    <div class="ml-4 method-params" id="ridge-params" style="display: none;">
+                        <div class="form-group">
+                            <label for="ridge_alpha">Alpha (regularization strength):</label>
+                            <input type="number" name="ridge_alpha" id="ridge_alpha" class="form-control form-control-sm" value="0.1" step="0.01" min="0">
+                            <small class="form-text text-muted">Higher values mean stronger regularization.</small>
+                        </div>
+                    </div>
+
+                    <!-- ElasticNet Regression -->
+                    <div class="form-check">
+                        <input type="checkbox" name="elasticnet" id="elasticnet" class="form-check-input method-checkbox">
+                        <label class="form-check-label" for="elasticnet">ElasticNet Regression</label>
+                    </div>
+                    <div class="ml-4 method-params" id="elasticnet-params" style="display: none;">
+                        <div class="form-group">
+                            <label for="elasticnet_alpha">Alpha (regularization strength):</label>
+                            <input type="number" name="elasticnet_alpha" id="elasticnet_alpha" class="form-control form-control-sm" value="0.1" step="0.01" min="0">
+                            <small class="form-text text-muted">Higher values mean stronger regularization.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="elasticnet_l1_ratio">L1 Ratio (mixing parameter):</label>
+                            <input type="number" name="elasticnet_l1_ratio" id="elasticnet_l1_ratio" class="form-control form-control-sm" value="0.5" step="0.1" min="0" max="1">
+                            <small class="form-text text-muted">0 = Ridge, 1 = Lasso, values between = mix of both.</small>
+                        </div>
+                    </div>
+
+                    <!-- PCA -->
+                    <div class="form-check">
+                        <input type="checkbox" name="pca" id="pca" class="form-check-input method-checkbox">
+                        <label class="form-check-label" for="pca">Principal Component Analysis (PCA)</label>
+                    </div>
+                    <div class="ml-4 method-params" id="pca-params" style="display: none;">
+                        <div class="form-group">
+                            <label for="pca_n_components">Number of Components:</label>
+                            <input type="number" name="pca_n_components" id="pca_n_components" class="form-control form-control-sm" value="2" step="1" min="2">
+                            <small class="form-text text-muted">Number of principal components to compute.</small>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="pc_x">X-axis Component:</label>
+                                <select name="pc_x" id="pc_x" class="form-control form-control-sm">
+                                    <option value="PC1">PC1</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="pc_y">Y-axis Component:</label>
+                                <select name="pc_y" id="pc_y" class="form-control form-control-sm">
+                                    <option value="PC2">PC2</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- All Methods -->
+                    <div class="form-check mt-2">
+                        <input type="checkbox" name="all" id="all" class="form-check-input">
+                        <label class="form-check-label" for="all">All Methods</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Analyze Data</button>
+            </form>
+
+            {% if error %}
+            <div class="alert alert-danger mt-3">{{ error }}</div>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Analysis Results</h2>
+
+            {% if lasso_html %}
+            <h3 class="mt-4">Lasso Regression</h3>
+            <div class="table-container table-responsive">
+                {{ lasso_html | safe }}
+            </div>
+            {% endif %}
+
+            {% if ridge_html %}
+            <h3 class="mt-4">Ridge Regression</h3>
+            <div class="table-container table-responsive">
+                {{ ridge_html | safe }}
+            </div>
+            {% endif %}
+
+            {% if elasticnet_html %}
+            <h3 class="mt-4">ElasticNet Regression</h3>
+            <div class="table-container table-responsive">
+                {{ elasticnet_html | safe }}
+            </div>
+            {% endif %}
+
+            {% if pca_html %}
+            <h3 class="mt-4">Principal Component Analysis (PCA)</h3>
+            <div class="table-container table-responsive">
+                {{ pca_html | safe }}
+            </div>
+            {% if pca_plot_path %}
+            <div class="mt-4 text-center">
+                <h4>PCA Plot</h4>
+                <img src="{{ pca_plot_path }}" class="img-fluid pca-plot" alt="PCA Plot">
+            </div>
+            {% endif %}
+            {% endif %}
+
+            <!-- All buttons in a single row at the bottom -->
+            <div class="mt-4 d-flex flex-wrap">
+                {% if pca_html and pca_plot_path %}
+                <a href="{{ url_for('download_pca_table') }}" class="btn btn-info mr-2 mb-2">Download PCA Table</a>
+                <a href="{{ url_for('download_pca_plot') }}" class="btn btn-primary mr-2 mb-2">Download PCA Plot</a>
+                {% endif %}
+
+                {% if lasso_html or ridge_html or elasticnet_html %}
+                <a href="{{ url_for('download_results', filetype='xlsx') }}" class="btn btn-success mr-2 mb-2">Download as XLSX</a>
+                {% endif %}
+
+                <a href="{{ url_for('services') }}" class="btn btn-outline-secondary mb-2">Run New Analysis</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

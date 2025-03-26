@@ -1,106 +1,185 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Regression Analysis</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="static/css/style.css">
-</head>
+{% block title %}GenomeLREP{% endblock %}
 
-<body>
-    {% if not form_submitted %}
-    <div id="inputFormContainer">
-        <div class="container">
-            <div class="title-card">
-                <h1>Regression Analysis</h1>
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4">Advanced Genomic Analysis Tools</h1>
+                <p class="lead">Uncover patterns in your genomic data with our suite of regression analysis methods.</p>
+                <div class="mt-4">
+                    <a href="{{ url_for('services') }}" class="btn btn-primary btn-lg">Get Started</a>
+                    <a href="#features" class="btn btn-outline-secondary btn-lg ml-2">Learn More</a>
+                </div>
             </div>
-            <form method="POST" enctype="multipart/form-data" class="mt-3">
-                <div class="form-group">
-                    <label for="file">Upload CSV File:</label>
-                    <input type="file" name="file" id="file" class="form-control-file">
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" name="lasso" id="lasso" class="form-check-input">
-                    <label class="form-check-label" for="lasso">Lasso Regression</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" name="ridge" id="ridge" class="form-check-input">
-                    <label class="form-check-label" for="ridge">Ridge Regression</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" name="elasticnet" id="elasticnet" class="form-check-input">
-                    <label class="form-check-label" for="elasticnet">ElasticNet Regression</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" name="pca" id="pca" class="form-check-input">
-                    <label class="form-check-label" for="pca">Principal Component Analysis (PCA)</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" name="all" id="all" class="form-check-input">
-                    <label class="form-check-label" for="all">All</label>
-                </div>
-                <button type="submit" class="btn btn-primary mt-2">Analyze</button>
-            </form>
-            {% if error %}
-            <div class="alert alert-danger mt-3">{{ error }}</div>
-            {% endif %}
+            <div class="col-lg-6">
+                <img src="static/img.png" alt="Genomic Analysis" class="img-fluid rounded">
+            </div>
         </div>
     </div>
-    {% else %}
-    <div class="container" id="outputContainer">
-        <div class="title-card">
-            <h1>Regression Analysis</h1>
-        </div>
-        <h2>Regression Results</h2>
+</section>
 
-        {% if lasso_html %}
-        <h3>Lasso Regression</h3>
-        <div class="table-container table-responsive">
-            {{ lasso_html | safe }}
-        </div>
-        {% endif %}
-
-        {% if ridge_html %}
-        <h3>Ridge Regression</h3>
-        <div class="table-container table-responsive">
-            {{ ridge_html | safe }}
-        </div>
-        {% endif %}
-
-        {% if elasticnet_html %}
-        <h3>ElasticNet Regression</h3>
-        <div class="table-container table-responsive">
-            {{ elasticnet_html | safe }}
-        </div>
-        {% endif %}
-
-        {% if pca_html %}
-        <h3>Principal Component Analysis (PCA)</h3>
-        <div class="table-container table-responsive">
-            {{ pca_html | safe }}
-        </div>
-        {% if pca_plot_path %}
-        <div class="mt-4 text-center">
-            <h4>PCA Plot: PC1 vs PC2</h4>
-            <img src="{{ pca_plot_path }}" class="img-fluid pca-plot" alt="PCA Plot">
-        </div>
-        <div class="mt-3">
-    <a href="{{ url_for('download_pca_plot') }}" class="btn btn-primary">Download PCA Plot</a>
-</div>
-        {% endif %}
-        {% endif %}
-
-        <div class="mt-3">
-            <a href="{{ url_for('download_results', filetype='xlsx') }}" class="btn btn-success">Download as XLSX</a>
+<!-- Features Section -->
+<section id="features" class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Our Analysis Methods</h2>
+        <div class="row">
+            <!-- Lasso Regression -->
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Lasso Regression</h5>
+                        <p class="card-text">Lasso (Least Absolute Shrinkage and Selection Operator) performs variable selection and regularization to enhance prediction accuracy and interpretability.</p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="#lasso-details" class="btn btn-sm btn-outline-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ridge Regression -->
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Ridge Regression</h5>
+                        <p class="card-text">Ridge regression tackles multicollinearity by adding a penalty equal to the square of the magnitude of coefficients, stabilizing estimates.</p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="#ridge-details" class="btn btn-sm btn-outline-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ElasticNet -->
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">ElasticNet</h5>
+                        <p class="card-text">ElasticNet combines Lasso and Ridge regression, balancing feature selection with stability, especially useful for correlated variables.</p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="#elasticnet-details" class="btn btn-sm btn-outline-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PCA -->
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">PCA</h5>
+                        <p class="card-text">Principal Component Analysis reduces dimensionality while preserving variability, enabling visualization and simplification of complex genomic datasets.</p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="#pca-details" class="btn btn-sm btn-outline-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    {% endif %}
+</section>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+<!-- Detailed Analysis Methods -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Detailed Analysis Methods</h2>
+        
+        <!-- Lasso Details -->
+        <div id="lasso-details" class="method-details mb-5">
+            <h3>Lasso Regression</h3>
+            <div class="row">
+                <div class="col-md-8">
+                    <p>Lasso Regression (Least Absolute Shrinkage and Selection Operator) is a powerful regularization technique that performs both variable selection and regularization. It adds a penalty equal to the absolute value of the magnitude of coefficients.</p>
+                    <p>Key features of Lasso regression:</p>
+                    <ul>
+                        <li>Performs feature selection by forcing some coefficients to be exactly zero</li>
+                        <li>Works well when you have many features with only some being important</li>
+                        <li>Helps prevent overfitting in high-dimensional datasets</li>
+                        <li>Produces more interpretable models by eliminating irrelevant features</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <img src="{{ url_for('static', filename='img_1.png') }}" alt="Lasso Regression" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Ridge Details -->
+        <div id="ridge-details" class="method-details mb-5">
+            <h3>Ridge Regression</h3>
+            <div class="row">
+                <div class="col-md-8">
+                    <p>Ridge regression addresses multicollinearity in data by adding a penalty term that is proportional to the square of the magnitude of coefficients. This regularization technique stabilizes the estimates and improves prediction accuracy.</p>
+                    <p>Key features of Ridge regression:</p>
+                    <ul>
+                        <li>Shrinks coefficients toward zero but doesn't eliminate any features completely</li>
+                        <li>Especially useful when features are highly correlated</li>
+                        <li>Reduces model complexity while keeping all features</li>
+                        <li>Provides more stable estimates compared to ordinary least squares</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <img src="static/img_2.png" alt="Ridge Regression" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+        
+        <!-- ElasticNet Details -->
+        <div id="elasticnet-details" class="method-details mb-5">
+            <h3>ElasticNet Regression</h3>
+            <div class="row">
+                <div class="col-md-8">
+                    <p>ElasticNet regression combines the strengths of both Lasso and Ridge regression by using a penalty term that is a mix of L1 (Lasso) and L2 (Ridge) regularization.</p>
+                    <p>Key features of ElasticNet:</p>
+                    <ul>
+                        <li>Balances feature selection (from Lasso) with coefficient stabilization (from Ridge)</li>
+                        <li>Particularly effective when dealing with many correlated features</li>
+                        <li>Overcomes limitations of Lasso when the number of features exceeds the number of samples</li>
+                        <li>Allows tuning the balance between L1 and L2 penalties using the mixing parameter</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <img src="static/img_3.png" alt="ElasticNet Regression" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+        
+        <!-- PCA Details -->
+        <div id="pca-details" class="method-details">
+            <h3>Principal Component Analysis (PCA)</h3>
+            <div class="row">
+                <div class="col-md-8">
+                    <p>Principal Component Analysis is a dimensionality reduction technique that transforms the data into a new coordinate system where the greatest variance lies on the first coordinate (first principal component), the second greatest variance on the second coordinate, and so on.</p>
+                    <p>Key features of PCA:</p>
+                    <ul>
+                        <li>Reduces high-dimensional data while preserving most of the variance</li>
+                        <li>Enables visualization of complex datasets in 2D or 3D plots</li>
+                        <li>Removes multicollinearity in the dataset</li>
+                        <li>Often used as a preprocessing step before applying other machine learning algorithms</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <img src="{{ url_for('static', filename='pca_plot.png') }}" alt="PCA" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-</html>
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2>Ready to Analyze Your Genomic Data?</h2>
+        <p class="lead">Our tools make it easy to uncover patterns and insights.</p>
+        <a href="{{ url_for('services') }}" class="btn btn-light btn-lg mt-3">Get Started Now</a>
+    </div>
+</section>
+    <section class="py-5 bg-primary text-white">
+    <div id="zoom" class="container text-center">
+        <iframe width="500" height="440" frameborder="0" src="https://ncase.me/loopy/v1.1/?embed=1&data=[[[1,1228,-34,1,%22User%2520input%2520%22,4],[2,1188,229,1,%22Website%2520%22,5],[3,856,365,0.5,%22Backend%2520%22,2],[5,427,607,0.5,%22ML%2520library%22,4],[12,387,931,0.5,%22LASSO%22,4],[13,784,896,0.5,%22Ridge%22,4],[14,1138,793,0.5,%22Elastic%2520net%22,4],[15,1130,550,0.5,%22JSON%2520FORMAT%22,3],[16,519,25,0.5,%22Front%2520end%22,1],[21,63,715,0.5,%22PCA%22,0]],[[2,1,44,-1,0],[1,2,40,1,0],[2,3,-43,1,0],[3,2,-92,-1,0],[5,3,141,1,0],[12,5,70,1,0],[13,5,-74,1,0],[14,5,-87,1,0],[5,15,68,1,0],[15,2,-115,1,0],[2,16,32,1,0],[16,2,53,-1,0],[3,5,-33,-1,0],[5,12,20,-1,0],[5,13,-15,-1,0],[5,14,44,-1,0],[5,21,30,-1,0],[21,5,94,1,0]],[],21%5D"></iframe>
+    </div>
+    </section>
+{% endblock %}
