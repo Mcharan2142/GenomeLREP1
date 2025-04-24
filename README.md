@@ -1,4 +1,4 @@
-#<b>GenomeLREP – Genomic Data Regularization and Visualization Platform</b>
+#<b>GenomeLREP – Genomic Data Regularization and Visualization Platform</b>#
 
 Description:
 
